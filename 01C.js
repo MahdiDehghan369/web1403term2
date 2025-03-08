@@ -6,4 +6,4 @@ for(let index = 2 ; index < argv.length; index++){
     sumNumber += +argv[index]
 }
 
-console.log(`Sum: ${sumNumber}`);
+console.log(`Sum : ${sumNumber}`);
