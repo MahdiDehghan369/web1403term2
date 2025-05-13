@@ -1,0 +1,40 @@
+<html>
+
+<head>
+    <title>page 1</title>
+</head>
+
+<body>
+
+    <input type="text" id="num1">
+    <input type="text" id="num2">
+    <input type="submit" id="submit">
+
+    <div class="result">
+
+    </div>
+
+    <script>
+        const submit = document.querySelector("#submit")
+        const resultDiv = document.querySelector(".result")
+        async function getData() {
+            const num1 = document.querySelector("#num1").value
+            const num2 = document.querySelector("#num2").value
+            const url = `http://127.0.0.1/sum/${num1}/${num2}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    console.log("ERROR.")
+                }
+                const json = await response.json();
+                console.log(json);
+                resultDiv.innerHTML = JSON.stringify(json)
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+        submit.addEventListener("click" , getData)
+    </script>
+</body>
+
+</html>
