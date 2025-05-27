@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <title>page 1</title>
+    <style>
+        .form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+            gap: 20px;
+        }
+
+        .result {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #afafaf;
+            height: 100px;
+            width: 200px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form">
+        <input type="text" id="num1">
+        <input type="text" id="num2">
+        <input type="submit" id="submit">
+    </div>
+
+
+    <div class="result">
+
+    </div>
+
+    <script>
+        const submit = document.querySelector("#submit")
+        const resultDiv = document.querySelector(".result")
+        async function getData() {
+            const num1 = document.querySelector("#num1").value
+            const num2 = document.querySelector("#num2").value
+            const url = `http://127.0.0.1/sum/`;
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        input1: num1,
+                        input2: num2
+                    })
+                });
+
+                if (!response.ok) {
+                    const spanTag = document.createElement("span")
+                    spanTag.innerHTML = JSON.stringify(await response.text())
+                    console.log(spanTag)
+                    resultDiv.appendChild(spanTag)
+                } else {
+                    const json = await response.json();
+                    const spanTag = document.createElement("span")
+                    spanTag.innerHTML = JSON.stringify(await response.text())
+                    console.log(spanTag)
+                    resultDiv.appendChild(spanTag)
+                }
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        submit.addEventListener("click", getData)
+    </script>
+</body>
+
+</html>
