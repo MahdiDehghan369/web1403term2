@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+
+    <style>
+        .container {
+            background-color: #fdfdfd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+            padding: 50px;
+            border-radius: 20px;
+            height: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="todos">
+            <div class="todo">
+            </div>
+        </div>
+
+        <div class="send-div">
+            <input type="text" id="txt-send" placeholder="type todo ...">
+            <input type="submit" id="btn-send" value="send">
+        </div>
+    </div>
+
+</body>
+
+<script>
+    async function getData() {
+        try {
+            const todoDiv = document.querySelector(".todo")
+            const response = await fetch("http://127.0.0.1/todo");
+            if (!response.ok) {
+                console.log("ERROR.")
+            }
+            let json = await response.json();
+
+            json.todos.forEach(todo => {
+
+                const inputTag = document.createElement("input")
+                const lableTag = document.createElement("lable")
+                lableTag.setAttribute("for" , todo.id)
+                inputTag.id = todo.id
+
+                inputTag.type = "checkbox"
+
+                lableTag.innerHTML = todo.text
+                
+                todoDiv.appendChild(lableTag)
+                todoDiv.appendChild(inputTag)
+                
+                
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    window.addEventListener("load", getData);
+</script>
+
+</html>
