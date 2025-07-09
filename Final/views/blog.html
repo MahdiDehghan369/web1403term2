@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Articles</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    h1{
+        text-align: center;
+    }
+    .article {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      position: relative;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .article h3 {
+      margin: 0 0 10px;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Articles</h1>
+  <div id="articles"></div>
+
+  <script>
+    async function loadArticles() {
+      try {
+        const res = await fetch('/api/article');
+
+        if (res.status !== 200) {
+          const data = await res.json();
+          alert(data.message);
+          return;
+        }
+
+        const articles = await res.json();
+
+        const container = document.getElementById('articles');
+        container.innerHTML = '';
+
+        articles.forEach((article) => {
+          const div = document.createElement('div');
+          div.className = 'article';
+          div.id = `article-${article.id}`;
+          div.innerHTML = `
+            <h3>${article.title}</h3>
+            <p>${article.body}</p>
+            <button class="delete-btn" onclick="deleteArticle('${article.id}')">X</button>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        console.error('Error loading articles:', err);
+        alert("Error");
+      }
+    }
+
+    async function deleteArticle(id) {
+      if (!confirm("Are sure?")) return;
+
+      try {
+        const res = await fetch(`/api/article/${id}`, {
+          method: 'DELETE',
+        });
+
+        const result = await res.json();
+
+        if (res.status === 200) {
+          const articleDiv = document.getElementById(`article-${id}`);
+          if (articleDiv) articleDiv.remove();
+        } else {
+          alert(result.message);
+        }
+      } catch (err) {
+        console.error('Error deleting article:', err);
+        alert("error");
+      }
+    }
+
+    loadArticles();
+  </script>
+</body>
+</html>
